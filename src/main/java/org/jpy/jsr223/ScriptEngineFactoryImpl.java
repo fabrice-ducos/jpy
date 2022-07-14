@@ -103,7 +103,7 @@ public class ScriptEngineFactoryImpl implements ScriptEngineFactory {
      */
     @Override
     public List<String> getNames() {
-        return Collections.unmodifiableList(Arrays.asList("cpython", "python"));
+        return Collections.unmodifiableList(Arrays.asList("cpython", "python", "jpy"));
     }
 
     /**
