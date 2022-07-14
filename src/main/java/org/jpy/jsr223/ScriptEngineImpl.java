@@ -20,6 +20,7 @@ import org.jpy.PyLib;
 import org.jpy.PyModule;
 import org.jpy.PyObject;
 import org.jpy.PyInputMode;
+import org.jpy.PyLibInitializer;
 
 import javax.script.AbstractScriptEngine;
 import javax.script.Bindings;
@@ -41,6 +42,13 @@ import java.util.stream.Collectors;
  */
 class ScriptEngineImpl extends AbstractScriptEngine implements Invocable {
 
+    static {
+	String pyLib = System.getProperty("jpy.pyLib");
+	String jpyLib = System.getProperty("jpy.jpyLib");
+	String jdlLib = System.getProperty("jpy.jdlLib");
+	PyLibInitializer.initPyLib(pyLib, jpyLib, jdlLib);
+    }
+    
     public static final String EXTRA_PATHS_KEY = ScriptEngineImpl.class.getName() + ".extraPaths";
 
     private final ScriptEngineFactoryImpl factory;
