@@ -1,8 +1,5 @@
 #!/bin/bash
 
-debug=false
-[ "$1" = '-D' ] && { debug=true; shift; }
-
 function get_property
 {
     # extracts a property from a java property file
@@ -37,4 +34,4 @@ jpyJar=`find target/ -name jpy-*.jar -print | head -n 1`
 [ -f "$jdlLib" ] || { echo "$0: failed to find jdlLib: $jdlLib" 1>&2 ; exit 1 ; }
 [ -f "$jpyJar" ] || { echo "$0: failed to find jpyJar: $jpyJar" 1>&2 ; exit 1 ; }
 
-jrunscript -Djpy.debug=$debug -Djpy.pyLib=$pyLib -Djpy.jpyLib=$jpyLib -Djpy.jdlLib=$jdlLib -cp $jpyJar -l python "$@"
+jrunscript -Djpy.pyLib=$pyLib -Djpy.jpyLib=$jpyLib -Djpy.jdlLib=$jdlLib -cp $jpyJar -l python "$@"
