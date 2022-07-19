@@ -16,11 +16,9 @@
 
 package org.jpy.jsr223;
 
-import org.jpy.PyLib;
 import org.jpy.PyModule;
 import org.jpy.PyObject;
 import org.jpy.PyInputMode;
-import org.jpy.PyLibInitializer;
 
 import javax.script.AbstractScriptEngine;
 import javax.script.Bindings;
@@ -30,7 +28,6 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.Reader;
 import java.util.stream.Collectors;
 
@@ -41,21 +38,10 @@ import java.util.stream.Collectors;
  * @since 0.8
  */
 class ScriptEngineImpl extends AbstractScriptEngine implements Invocable {
-
-    static {
-	String pyLib = System.getProperty("jpy.pyLib");
-	String jpyLib = System.getProperty("jpy.jpyLib");
-	String jdlLib = System.getProperty("jpy.jdlLib");
-	PyLibInitializer.initPyLib(pyLib, jpyLib, jdlLib);
-    }
-    
-    public static final String EXTRA_PATHS_KEY = ScriptEngineImpl.class.getName() + ".extraPaths";
-
     private final ScriptEngineFactoryImpl factory;
 
     ScriptEngineImpl(ScriptEngineFactoryImpl factory) {
         this.factory = factory;
-        PyLib.startPython(System.getProperty(EXTRA_PATHS_KEY, "").split(File.pathSeparator));
     }
 
     /**

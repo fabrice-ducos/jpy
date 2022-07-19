@@ -16,8 +16,12 @@
 
 package org.jpy.jsr223;
 
+import org.jpy.PyLib;
+import org.jpy.PyLibInitializer;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,8 +37,13 @@ import java.util.Map;
  */
 public class ScriptEngineFactoryImpl implements ScriptEngineFactory {
 
+    public static final String PYTHON_LIB_KEY = ScriptEngineFactoryImpl.class.getName() + ".pythonLib";
+    public static final String JPY_LIB_KEY = ScriptEngineFactoryImpl.class.getName() + ".jpyLib";
+    public static final String JDL_LIB_KEY = ScriptEngineFactoryImpl.class.getName() + ".jdlLib";
+    public static final String EXTRA_PATHS_KEY = ScriptEngineFactoryImpl.class.getName() + ".extraPaths";
+
     private final Map<String, Object> parameters;
-    private ScriptEngineImpl scriptEngine;
+    private volatile ScriptEngineImpl scriptEngine;
 
     public ScriptEngineFactoryImpl() {
         parameters = new HashMap<>();
@@ -239,6 +248,21 @@ public class ScriptEngineFactoryImpl implements ScriptEngineFactory {
         if (scriptEngine == null) {
             synchronized (this) {
                 if (scriptEngine == null) {
+                    String pyLib = System.getProperty(PYTHON_LIB_KEY);
+                    if (pyLib == null) {
+                        throw new IllegalArgumentException(String.format("Must specify '%s'", PYTHON_LIB_KEY));
+                    }
+                    String jpyLib = System.getProperty(JPY_LIB_KEY);
+                    if (jpyLib == null) {
+                        throw new IllegalArgumentException(String.format("Must specify '%s'", JPY_LIB_KEY));
+                    }
+                    String jdlLib = System.getProperty(JDL_LIB_KEY);
+                    if (jdlLib == null) {
+                        throw new IllegalArgumentException(String.format("Must specify '%s'", JDL_LIB_KEY));
+                    }
+                    String[] extraPaths = System.getProperty(EXTRA_PATHS_KEY, "").split(File.pathSeparator);
+                    PyLibInitializer.initPyLib(pyLib, jpyLib, jdlLib);
+                    PyLib.startPython(extraPaths);
                     scriptEngine = new ScriptEngineImpl(this);
                 }
             }
